@@ -1,0 +1,10 @@
+{
+  "name": "openclerk/pages",
+  "require": {
+  },
+  "autoload": {
+    "psr-4": {
+      "Pages\\": "src"
+    }
+  }
+}
