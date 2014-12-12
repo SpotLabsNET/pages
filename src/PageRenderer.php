@@ -5,6 +5,8 @@ namespace Pages;
 class PageRenderer {
 
   static $templates = array();
+  static $stylesheets = array();
+  static $javascripts = array();
 
   /**
    * Set this template location as the _only_ location for templates.
@@ -26,6 +28,34 @@ class PageRenderer {
 
   static function footer($arguments = array()) {
     self::requireTemplate("footer", $arguments);
+  }
+
+  /**
+   * Pushes this stylesheet location (relative to the user) onto the front of the include queue.
+   * @param $css a relative (e.g. with {@link url_for()}) or absolute (e.g. JQuery CDN) path
+   */
+  static function addStylesheet($css) {
+    array_unshift(self::$stylesheets, $css);
+  }
+
+  /**
+   * Pushes this Javascript location (relative to the user) onto the front of the include queue.
+   * @param $css a relative (e.g. with {@link url_for()}) or absolute (e.g. JQuery CDN) path
+   */
+  static function addJavascript($css) {
+    array_unshift(self::$javascripts, $css);
+  }
+
+  static function includeStylesheets() {
+    foreach (self::$stylesheets as $css) {
+      echo '<link rel="stylesheet" type="text/css" href="' . htmlspecialchars($css) . '">' . "\n";
+    }
+  }
+
+  static function includeJavascripts() {
+    foreach (self::$javascripts as $js) {
+      echo '<script type="text/javascript" src="' . htmlspecialchars($js) . '"></script>' . "\n";
+    }
   }
 
   /**
