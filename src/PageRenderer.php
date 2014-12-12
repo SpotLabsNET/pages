@@ -31,19 +31,19 @@ class PageRenderer {
   }
 
   /**
-   * Pushes this stylesheet location (relative to the user) onto the front of the include queue.
+   * Pushes this stylesheet location (relative to the user) onto the back of the include queue.
    * @param $css a relative (e.g. with {@link url_for()}) or absolute (e.g. JQuery CDN) path
    */
   static function addStylesheet($css) {
-    array_unshift(self::$stylesheets, $css);
+    array_push(self::$stylesheets, $css);
   }
 
   /**
-   * Pushes this Javascript location (relative to the user) onto the front of the include queue.
+   * Pushes this Javascript location (relative to the user) onto the back of the include queue.
    * @param $css a relative (e.g. with {@link url_for()}) or absolute (e.g. JQuery CDN) path
    */
   static function addJavascript($css) {
-    array_unshift(self::$javascripts, $css);
+    array_push(self::$javascripts, $css);
   }
 
   static function includeStylesheets() {
