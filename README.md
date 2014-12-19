@@ -37,3 +37,18 @@ $user = get_user();
 \Pages\PageRenderer::footer();
 ```
 
+## HAML
+
+You can also define templates with HAML syntax:
+
+```haml
+/ templates/index.haml
+
+- if($user)
+  %h2 Logged in successfully as #{$user}
+- else
+  %h2 Could not log in
+
+:php
+  echo link_to(url_for("index"), "Back home")
+```
