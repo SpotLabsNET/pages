@@ -1,6 +1,7 @@
 {
   "name": "openclerk/pages",
   "require": {
+    "mthaml/mthaml": "~1.6"
   },
   "autoload": {
     "psr-4": {

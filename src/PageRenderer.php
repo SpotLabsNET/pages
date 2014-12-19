@@ -76,6 +76,17 @@ class PageRenderer {
         require($dir . "/" . $template . ".php");
         return;
       }
+
+      if (file_exists($dir . "/" . $template . ".haml")) {
+        $haml = new \MtHaml\Environment('php');
+        $executor = new \MtHaml\Support\Php\Executor($haml, array(
+            'cache' => sys_get_temp_dir().'/haml',
+        ));
+
+        // Compiles and executes the HAML template, with variables given as second argument
+        $executor->display($dir . "/" . $template . ".haml", $arguments);
+        return;
+      }
     }
 
     throw new TemplateNotFoundException("Could not find template '$template'",
