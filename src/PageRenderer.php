@@ -8,6 +8,12 @@ class PageRenderer {
   static $stylesheets = array();
   static $javascripts = array();
 
+  static $haml_options = array();
+
+  static function setHamlOptions($options) {
+    self::$haml_options = $options;
+  }
+
   /**
    * Set this template location as the _only_ location for templates.
    */
@@ -78,7 +84,7 @@ class PageRenderer {
       }
 
       if (file_exists($dir . "/" . $template . ".haml")) {
-        $haml = new \MtHaml\Environment('php');
+        $haml = new \MtHaml\Environment('php', self::$haml_options);
         $executor = new \MtHaml\Support\Php\Executor($haml, array(
             'cache' => sys_get_temp_dir().'/haml',
         ));
