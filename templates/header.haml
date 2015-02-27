@@ -1,0 +1,13 @@
+!!!
+!= "<html>"
+%head
+  %title= $title
+
+  != \Pages\PageRenderer::includeStylesheets()
+  != \Pages\PageRenderer::includeJavascripts()
+
+!= "<body>"
+
+!= \Pages\PageRenderer::requireTemplate("navigation");
+
+!= "<div class=\"content\">"

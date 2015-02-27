@@ -10,9 +10,13 @@ Create a new folder `templates\` and create `templates\header.php` and `template
 
 ```php
 // inc/global.php
-\Pages\PageRenderer::addTemplatesLocation(__DIR__ . "/../templates");
-\Pages\PageRenderer::addStylesheet(\Openclerk\Router::urlFor("css/default.css"));
-\Pages\PageRenderer::addJavascript(\Openclerk\Router::urlFor("js/default.js"));
+
+use \Pages\PageRenderer;
+use \Openclerk\Router;
+
+PageRenderer::addTemplatesLocation(__DIR__ . "/../templates");
+PageRenderer::addStylesheet(Router::urlFor("css/default.css"));
+PageRenderer::addJavascript(Router::urlFor("js/default.js"));
 ```
 
 ```php
@@ -30,11 +34,13 @@ if ($user) {
 ```php
 // site/index.php
 
+use \Pages\PageRenderer;
+
 $user = get_user();
 
-\Pages\PageRenderer::header(array("title" => "My page title"));
-\Pages\PageRenderer::requireTemplate("index", array('user' => $user));
-\Pages\PageRenderer::footer();
+PageRenderer::header(array("title" => "My page title"));
+PageRenderer::requireTemplate("index", array('user' => $user));
+PageRenderer::footer();
 ```
 
 ## HAML
@@ -49,6 +55,5 @@ You can also define templates with HAML syntax:
 - else
   %h2 Could not log in
 
-:php
-  echo link_to(url_for("index"), "Back home")
+!= link_to(url_for("index"), "Back home")
 ```
