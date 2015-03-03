@@ -2,6 +2,8 @@
 
 namespace Pages;
 
+use \Openclerk\Events;
+
 class PageRenderer {
 
   static $templates = array();
@@ -29,11 +31,15 @@ class PageRenderer {
   }
 
   static function header($arguments = array()) {
+    Events::trigger('pages_header_start', $arguments);
     self::requireTemplate("header", $arguments);
+    Events::trigger('pages_header_end', $arguments);
   }
 
   static function footer($arguments = array()) {
+    Events::trigger('pages_footer_start', $arguments);
     self::requireTemplate("footer", $arguments);
+    Events::trigger('pages_footer_end', $arguments);
   }
 
   /**
@@ -76,6 +82,8 @@ class PageRenderer {
    * search order: {@code .php}, {@code .haml.php}, {@code .haml}.
    */
   static function requireTemplate($template, $arguments = array()) {
+    Events::trigger('pages_template_start', $arguments + array('template' => $template));
+
     if (!is_array($arguments)) {
       throw new \InvalidArgumentException("Arguments '$arguments' need to be an array, not " . gettype($arguments));
     }
@@ -90,6 +98,7 @@ class PageRenderer {
         }
 
         require($file);
+        Events::trigger('pages_template_end', $arguments + array('template' => $template, 'filetype' => 'php'));
         return;
       }
 
@@ -105,6 +114,7 @@ class PageRenderer {
 
           // Compiles and executes the HAML template, with variables given as second argument
           self::$executor->display($file, $arguments);
+          Events::trigger('pages_template_end', $arguments + array('template' => $template, 'filetype' => 'haml'));
           return;
         }
       }

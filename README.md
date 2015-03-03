@@ -57,3 +57,12 @@ You can also define templates with HAML syntax:
 
 != link_to(url_for("index"), "Back home")
 ```
+
+## Events
+
+A number of [events](https://github.com/openclerk/events) are triggered by the library,
+and can be captured for [metrics](https://github.com/openclerk/metrics):
+
+* `pages_header_start`, `pages_header_end`
+* `pages_footer_start`, `pages_footer_end`
+* `pages_template_start`, `pages_template_end`
