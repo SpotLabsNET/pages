@@ -65,7 +65,15 @@ class PageRenderer {
   }
 
   /**
+   * Cached {@link MtHaml\Support\Php\Executor} instance, as necessary.
+   */
+  static $executor = null;
+
+  /**
    * Render the given template.
+   *
+   * Searches for templates within each template directory, with the following
+   * search order: {@code .php}, {@code .haml.php}, {@code .haml}.
    */
   static function requireTemplate($template, $arguments = array()) {
     if (!is_array($arguments)) {
@@ -73,25 +81,32 @@ class PageRenderer {
     }
 
     foreach (self::$templates as $dir) {
-      if (file_exists($dir . "/" . $template . ".php")) {
+      // either include templates as direct PHP files...
+      $file = $dir . "/" . $template . ".php";
+      if (file_exists($file)) {
         // create locally scoped variables for all arguments
         foreach ($arguments as $key => $value) {
           $$key = $value;
         }
 
-        require($dir . "/" . $template . ".php");
+        require($file);
         return;
       }
 
-      if (file_exists($dir . "/" . $template . ".haml")) {
-        $haml = new \MtHaml\Environment('php', self::$haml_options);
-        $executor = new \MtHaml\Support\Php\Executor($haml, array(
-            'cache' => sys_get_temp_dir().'/haml',
-        ));
+      // ... or as HAML templates
+      foreach (array($dir . "/" . $template . ".php.haml", $dir . "/" . $template . ".haml") as $file) {
+        if (file_exists($file)) {
+          if (self::$executor === null) {
+            $haml = new \MtHaml\Environment('php', self::$haml_options);
+            self::$executor = new \MtHaml\Support\Php\Executor($haml, array(
+                'cache' => sys_get_temp_dir().'/haml',
+            ));
+          }
 
-        // Compiles and executes the HAML template, with variables given as second argument
-        $executor->display($dir . "/" . $template . ".haml", $arguments);
-        return;
+          // Compiles and executes the HAML template, with variables given as second argument
+          self::$executor->display($file, $arguments);
+          return;
+        }
       }
     }
 
