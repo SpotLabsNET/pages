@@ -76,6 +76,11 @@ class PageRenderer {
   static $executor = null;
 
   /**
+   * Allow arguments to be passed along to sub-templates.
+   */
+  static $argument_stack = array();
+
+  /**
    * Render the given template.
    *
    * Searches for templates within each template directory, with the following
@@ -88,10 +93,19 @@ class PageRenderer {
 
     Events::trigger('pages_template_start', $arguments + array('template' => $template));
 
+    // so sub-templates can access all parent arguments
+    if (self::$argument_stack) {
+      $arguments += self::$argument_stack[count(self::$argument_stack) - 1];
+    }
+
+    // add to argument stack
+    array_push(self::$argument_stack, $arguments);
+
     foreach (self::$templates as $dir) {
       // either include templates as direct PHP files...
       $file = $dir . "/" . $template . ".php";
       if (file_exists($file)) {
+
         // create locally scoped variables for all arguments
         foreach ($arguments as $key => $value) {
           $$key = $value;
@@ -99,6 +113,10 @@ class PageRenderer {
 
         require($file);
         Events::trigger('pages_template_end', $arguments + array('template' => $template, 'filetype' => 'php'));
+
+        // and then remove from argument stack
+        array_pop(self::$argument_stack);
+
         return;
       }
 
@@ -115,6 +133,10 @@ class PageRenderer {
           // Compiles and executes the HAML template, with variables given as second argument
           self::$executor->display($file, $arguments);
           Events::trigger('pages_template_end', $arguments + array('template' => $template, 'filetype' => 'haml'));
+
+          // and then remove from argument stack
+          array_pop(self::$argument_stack);
+
           return;
         }
       }
