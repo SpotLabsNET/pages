@@ -82,11 +82,11 @@ class PageRenderer {
    * search order: {@code .php}, {@code .haml.php}, {@code .haml}.
    */
   static function requireTemplate($template, $arguments = array()) {
-    Events::trigger('pages_template_start', $arguments + array('template' => $template));
-
     if (!is_array($arguments)) {
       throw new \InvalidArgumentException("Arguments '$arguments' need to be an array, not " . gettype($arguments));
     }
+
+    Events::trigger('pages_template_start', $arguments + array('template' => $template));
 
     foreach (self::$templates as $dir) {
       // either include templates as direct PHP files...
