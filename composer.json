@@ -1,7 +1,7 @@
 {
   "name": "openclerk/pages",
   "require": {
-    "openclerk/events": "dev-master",
+    "openclerk/events": "^0.2",
     "mthaml/mthaml": "^1.7.0"
   },
   "autoload": {
